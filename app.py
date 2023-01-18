@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 
 import os
 import bcrypt
+import random
 
 app = Flask(__name__)
 app.secret_key = "KpopShop.com"
@@ -18,6 +19,7 @@ users = db.users
 products = db.products
 carts = db.carts
 purchased = db.purchased
+history = db.history
 
 UPLOAD_FOLDER = "/Users/66987/Documents/work-project/k-pop-shop/static/product-images"
 ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "gif"]
@@ -29,6 +31,7 @@ def allowed_file(filename):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
 def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "name" not in session:
@@ -39,6 +42,7 @@ def login_is_required(function):
             return function()
     wrapper.__name__ = function.__name__
     return wrapper
+
 
 def login_is_required_admin(function):
     def wrapper(*args, **kwargs):
@@ -65,9 +69,9 @@ def index():
         cout_cart = carts.count_documents({"user_email": session['email']})
     return render_template('index.html', username=username, product=all_product, cout_cart=cout_cart)
 
+
 @app.post("/search/<category>")
 def search(category):
-    print(category)
     cout_cart = 0
     all_product = products.find({"category": category})
     username = False
@@ -137,13 +141,37 @@ def updateAmountCart(id):
 
     return redirect(url_for('view_cart'))
 
+
 @app.post('/add/purchased/<payment>/')
 def addPurchased(payment):
     print(request.form['optradio'])
     pay_by = request.form['optradio']
+    f_purchased = purchased.find({"user_email": session['email']})
+    cout_purchased = purchased.count_documents(
+        {"user_email": session['email']})
+    if cout_purchased > 0:
+        history.insert_many(f_purchased)
+        purchased.delete_many({"user_email": session['email']})
     if bool(payment) == True:
-        product = carts.find({"user_email": session['email']})
-        purchased.insert_many(product)
+        for i in carts.find({"user_email": session['email']}):
+            username = i['user_name']
+            useremail = i['user_email']
+            product_id = i['product_id']
+            product_name = i['product_name']
+            product_price = i['product_price']
+            product_amount = i['product_amount']
+            product_image = i['product_image']
+            purchased.insert_one({
+                "user_name": username,
+                "user_email": useremail,
+                "product_id": product_id,
+                "product_name": product_name,
+                "product_price": product_price,
+                "product_amount": product_amount,
+                "product_image": product_image,
+                "pay_by": pay_by,
+                "pay_date": datetime.now()
+            })
         carts.delete_many({"user_email": session['email']})
 
     return redirect(url_for('paymented'))
@@ -153,21 +181,42 @@ def addPurchased(payment):
 @login_is_required
 def paymented():
     product = []
+    order_no = random.randint(0, 10000000000)
     product = purchased.find({"user_email": session['email']})
+    price_total = []
+    price = 0
+    address = session['address']
+    for i in purchased.find({"user_email": session['email']}):
+        pay_by = i['pay_by']
+        date = i['pay_date']
+        pay_date = date.strftime("%d/%m/%Y, %H:%M")
+        total = i['product_price']
+        n = i['product_amount']
+        totaled = int(total)*int(n)
+        price_total.append(int(totaled))
+    price = sum(price_total)
     flash('ชำระเงินเสร็จสิ้น')
-    return render_template('paymented.html', product=product)
+    return render_template('paymented.html',
+                           product=product,
+                           order_no=order_no,
+                           pay_date=pay_date,
+                           email=session['email'],
+                           sum_price=price,
+                           pay_by=pay_by,
+                           address=address
+                           )
 
 
 @app.route("/cart/payment")
 @login_is_required
 def payment():
     product = []
+    price = 0
+    address = session['address']
     cout_cart = carts.count_documents({"user_email": session['email']})
     if cout_cart > 0:
         product = carts.find({"user_email": session['email']})
         price_total = []
-        price = 0
-        address = session['address']
         phone = session['phone_number']
         name = session['name']
         for i in carts.find({"user_email": session['email']}):
@@ -216,6 +265,32 @@ def deleteItem_to_Product(id):
     if "name" in session:
         products.delete_one({"_id": ObjectId(id)})
         return redirect(url_for('viewAdminItem'))
+    else:
+        return abort(404)
+
+
+@app.route("/admin/update/<id>", methods=['GET', 'POST'])
+def admin_update(id):
+    if "name" in session and session['is_admin'] == True:
+        product = products.find_one({"_id": ObjectId(id)})
+
+        if request.method == 'POST':
+            print(id)
+            print(request.form['name'])
+            product_name = request.form['name']
+            price = request.form['price']
+            stock = request.form['stock']
+            category = request.form['select']
+            print(product_name)
+            products.find_one_and_update({"_id": ObjectId(id)}, {
+                "$set": {
+                    'name': product_name,
+                    'price': price,
+                    'stock': stock,
+                    'category': category
+                }})
+            return redirect(url_for('viewAdminItem'))
+        return render_template('admin_edit.html', username="username", product=product)
     else:
         return abort(404)
 

@@ -7,46 +7,124 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h2 class="mt-2" id="text-top-card">ชำระเงินเสร็จสิ้น</h2>
+    <h3 class="mt-2 d-flex justify-content-center fw-bold" id="text-top-card">ใบสั่งซื้อสินค้า</h3>
+    <div class="card mb-4">
+        <div class="card-header py-3">
+            <h5 class="mb-0 text-center fw-bold">ข้อมูลผู้ซื้อสินค้า</h5>
+            <div class="card-body">
+                <div class="row" style="border: 1px solid black; padding: 10px;">
+                    <div class="col-lg-6 col-md-6">
+                        <p class="text-muted"><strong>เลขที่คำสั่งซื้อ</strong></p>
+                        <p>{{ order_no }}</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <p class="text-muted"><strong>วันที่</strong></p>
+                        <p>{{ pay_date }}</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <p class="text-muted"><strong>อีเมล</strong></p>
+                        <p>{{ email }}</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <p class="text-muted"><strong>รวมทั้งหมด</strong></p>
+                        <p>{{ sum_price }}฿</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <p class="text-muted"><strong>วิธีชำระเงิน</strong></p>
+                        {% if pay_by == "banking" %}
+                        <p>โอนเงินเข้าบัญชีธนาคาร</p>
+                        {% else %}
+                        <p>ชำระปลาทาง</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <p class="text-muted"><strong>ที่อยู่</strong></p>
+                        <p>{{address}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
-        {% for item in product %}
-        <div class="col-lg-6 mt-2 mb-lg-2 d-flex justify-content-center">
-            <img class="cart-images" src="../static/product-images/{{ item['product_image'] }}"
-                alt="{{ item['product_name'] }}">
-        </div>
-        <div class="col-lg-6 mb-2">
-            <h4>{{ item['product_name'] }}</h4>
-            <h5>ราคา: {{ item['product_price'] }}฿</h5>
-            <h5>จำนวนสินค้า: {{ item['product_amount'] }}</h5>
-            <!-- <form method="POST" action="{{ url_for('updateAmountCart', id=item['_id']) }}" class="row g-3">
-                <div class="col-auto">
-                    <label for="inputPassword2" class="col-form-label">จำนวนสินค้า</label>
+        <section class="h-100 gradient-custom">
+            <div class="row d-flex justify-content-center">
+                <div class="col">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">รายละเอียดสินค้า</h5>
+                        </div>
+                        {% for item in product %}
+                        <div class="card-body">
+                            <!-- Single item -->
+                            <div class="row">
+                                <div class="col-lg-3 col-md-12 col-sm-12 mb-4 mb-lg-0">
+                                    <!-- Image -->
+                                    <div class="bg-image hover-overlay hover-zoom ripple rounded"
+                                        data-mdb-ripple-color="light">
+                                        <img src="../static/product-images/{{ item['product_image'] }}" class="w-100"
+                                            alt="item['product_name']" />
+                                        <a href="#!">
+                                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)">
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <!-- Image -->
+                                </div>
+                                <div class="col-auto">
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-6 text-muted">
+                                            <p><strong>สินค้า:</strong></p>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <p><strong>{{ item['product_name'] }}</strong></p>
+                                        </div>
+                                        <div class="col-lg-5 col-md-6 text-muted">
+                                            <p>จำนวน:</p>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <p>{{ item.product_amount }}</p>
+                                        </div>
+                                        <div class="col-lg-5 col-md-6 text-muted">
+                                            <p>มูลค่า:</p>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <p>{{ "%0.2f" | format(item.product_price| int*item.product_amount| int)
+                                                }}฿
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-5 col-md-6 text-muted">
+                                            <p>การจัดส่ง:</p>
+                                            <!-- Data -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <p>ฟรี</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Single item -->
+                            <hr class="my-4" />
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-auto">
-                    <input type="number" class="form-control" id="inputPassword2" placeholder="เพิ่มจำนวนสินค้า"
-                        value='{{ item.product_amount }}' name="amount">
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-info mb-3">Confirm</button>
-                </div>
-            </form> -->
-        </div>
-        <hr>
-        {% endfor %}
+            </div>
+        </section>
     </div>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-success mt-2 text-center" role="alert">
-            <i class="fa-solid fa-check text-success"></i> {{ message }}
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-    <div class="text-center">
-        <a href="{{ url_for('index') }}" class="btn btn-primary mt-lg-2 mt-sm-0" id="card-btn">กลับสู่หน้าแรก</a>
-    </div>
-    <br>
-    <br>
+</div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success mt-2 text-center" role="alert">
+    <i class="fa-solid fa-check text-success"></i> {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="text-center">
+    <a href="{{ url_for('index') }}" class="btn btn-primary mt-lg-2 mt-sm-0" id="card-btn">กลับสู่หน้าแรก</a>
+</div>
+<br>
+<br>
 </div>
 {% endblock %}

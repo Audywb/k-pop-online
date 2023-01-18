@@ -60,7 +60,7 @@
                                         <div class="bg-image hover-overlay hover-zoom ripple rounded"
                                             data-mdb-ripple-color="light">
                                             <img src="../static/product-images/{{ item['product_image'] }}"
-                                                class="w-100" alt="Blue Jeans Jacket" />
+                                                class="w-100" alt="item['product_name']"/>
                                             <a href="#!">
                                                 <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)">
                                                 </div>
@@ -136,11 +136,6 @@
         </section>
         {% else %}
         {% endif %}
-    </div>
-    <div class="text-center">
-        <form method="POST" action="{{ url_for('addPurchased', payment=True) }}">
-            <button type="submit" class="btn btn-primary">ยืนยันชำระเงิน</button>
-        </form>
     </div>
     <br>
     <br>

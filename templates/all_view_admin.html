@@ -61,12 +61,16 @@
                         <img class="card-images" src="../static/product-images/{{ item['image'] }}"
                             alt="{{ item['image'] }}">
                         <div class="row">
-                            <div class="text-start col-lg-6">
+                            <div class="text-start col-lg-8 col-md-7">
                                 <p class="mt-2" id="card-price">{{ item['price'] }}฿</p>
                             </div>
-                            <div class="text-lg-end col-lg-6 mt-2">
-                                <form method="POST" action="{{ url_for('deleteItem_to_Product', id=item['_id']) }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">ลบสินค้า</button>
+                            <div class="text-lg-end col-lg-4 col-md-5 mt-2 d-flex justify-content-lg-end">
+                                <a href="{{ url_for('admin_update', id=item['_id']) }}">
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="fa-regular fa-pen-to-square"></i></button></a>
+                                <form class="col-6" method="POST"
+                                    action="{{ url_for('deleteItem_to_Product', id=item['_id']) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger">ลบ</button>
                                 </form>
                             </div>
                         </div>
