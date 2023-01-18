@@ -18,6 +18,7 @@
 6. เข้า vs code
 //กด Ctrl+Shift+P
 - git Clone https://github.com/Audywb/k-pop-online.git
+
 //ติดตั้ง Library python
 - pip install -r requirements.txt
 
