@@ -1,0 +1,27 @@
+{% extends "head.html" %}
+{% block title %}Setting{% endblock %}
+
+{% block navbar %}
+<a class="nav-link active fs-3 fw-bold" aria-current="page" href="{{url_for('index')}}">HOME</a>
+{% endblock %} - K-POP
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mt-5 text-center">
+        <h5 class="fs-4 fw-bold mb-4">การตั้งค่า</h5>
+        {% if username != 'not_login' %}
+        <a class="mt-2 fs-5" href="{{url_for('logout')}}">ออกจากระบบ</a>
+        {% else %}
+        <a class="mt-2 fs-5" href="{{url_for('login')}}">เข้าสู่ระบบ</a>
+        {% endif %}
+        <br>
+        <a class="mt-2 fs-5" href="{{url_for('admin')}}">ผู้ดูแลระบบ</a>
+        <!-- <div class="col-xl-4 offset-xl-4 col-lg-5 offset-lg-4 col-md-6 offset-md-3">
+            <div class="text-about mx-lg-5">
+                <h5 class="fs-5 fw-bold">Email:</h5>
+                <h5 class="fs-5 fw-bold text-decoration-underline mx-4"></h5>
+            </div>
+        </div> -->
+    </div>
+</div>
+{% endblock %}

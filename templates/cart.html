@@ -1,0 +1,87 @@
+{% extends "head.html" %}
+{% block title %}Cart{% endblock %}
+
+{% block navbar %}
+<a class="nav-link active fs-3 fw-bold" aria-current="page" href="{{url_for('index')}}">HOME</a>
+{% endblock %} - K-POP
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mt-4 d-flex justify-content-center fw-bold" id="text-top-card">ตระกร้าสินค้า</h2>
+    <div class="row">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning mt-2" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% if cout_cart > 0 %}
+        <section>
+            <div class="container h-100 py-5">
+                <div class="row d-flex justify-content-center h-100">
+                    <div class="col-lg-9 col-sm-12">
+                        {% for item in cart_product %}
+                        <div class="card rounded-3 mb-4 align-items-center">
+                            <div class="card-body p-4">
+                                <div class="row d-flex justify-content-between align-items-center">
+                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                        <img src="../static/product-images/{{ item['product_image'] }}"
+                                            class="img-fluid rounded-3" alt="Cotton T-shirt">
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-xl-3">
+                                        <p class="lead fw-normal mb-2">{{ item['product_name'] }}</p>
+                                        <!-- <p><span class="text-muted">Size: </span>M <span class="text-muted">Color:
+                                            </span>Grey</p> -->
+                                    </div>
+                                    <div class="col-md-3 col-lg-2 col-xl-2">
+                                        <h5 class="mb-0">ราคา {{ item['product_price'] }}฿</h5>
+                                    </div>
+                                    <form class="col-md-3 col-lg-3 col-xl-2 d-flex" method="POST"
+                                        action="{{ url_for('updateAmountCart', id=item['_id']) }}">
+                                        <!-- <button class="btn btn-link px-1"
+                                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                            <i class="fas fa-minus"></i>
+                                        </button> -->
+                                        <input id="form1" min="0" value='{{ item.product_amount }}' name="amount"
+                                            type="number" class="form-control form-control-sm me-2" />
+                                        <!-- <button class="btn btn-link px-1"
+                                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                            <i class="fas fa-plus"></i>
+                                        </button> -->
+                                        <button type="submit" class="btn btn-success btn-sm"><i class="fa-solid fa-check"></i></button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('deleteItem', id=item['_id']) }}"
+                                        class="col-md-1 col-lg-1 col-xl-1 text-lg-end text-sm-start">
+                                        <button type="submit" class="btn btn-sm btn-link text-danger"><i
+                                                class="fas fa-trash fa-lg"></i></button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-3 col-sm-10">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">ยอดรวม</h5>
+                                <p class="card-text mt-2">มูลค่า: {{price_total}}฿</p>
+                                <p class="card-text">การจัดส่ง: ฟรี</p>
+                                <p class="card-text">ที่อยู่: {{address}}</p>
+                                <a href="{{ url_for('payment') }}" class="btn btn-primary btn-sm">ดำเนินการสั่งซื้อ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% else %}
+        {% endif %}
+    </div>
+    <br>
+    <br>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "head.html" %}
+{% block title %}Paymented{% endblock %}
+
+{% block navbar %}
+<a class="nav-link active fs-3 fw-bold" aria-current="page" href="{{url_for('index')}}">HOME</a>
+{% endblock %} - K-POP
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mt-2" id="text-top-card">ชำระเงินเสร็จสิ้น</h2>
+    <div class="row">
+        {% for item in product %}
+        <div class="col-lg-6 mt-2 mb-lg-2 d-flex justify-content-center">
+            <img class="cart-images" src="../static/product-images/{{ item['product_image'] }}"
+                alt="{{ item['product_name'] }}">
+        </div>
+        <div class="col-lg-6 mb-2">
+            <h4>{{ item['product_name'] }}</h4>
+            <h5>ราคา: {{ item['product_price'] }}฿</h5>
+            <h5>จำนวนสินค้า: {{ item['product_amount'] }}</h5>
+            <!-- <form method="POST" action="{{ url_for('updateAmountCart', id=item['_id']) }}" class="row g-3">
+                <div class="col-auto">
+                    <label for="inputPassword2" class="col-form-label">จำนวนสินค้า</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" class="form-control" id="inputPassword2" placeholder="เพิ่มจำนวนสินค้า"
+                        value='{{ item.product_amount }}' name="amount">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-info mb-3">Confirm</button>
+                </div>
+            </form> -->
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success mt-2 text-center" role="alert">
+            <i class="fa-solid fa-check text-success"></i> {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    <div class="text-center">
+        <a href="{{ url_for('index') }}" class="btn btn-primary mt-lg-2 mt-sm-0" id="card-btn">กลับสู่หน้าแรก</a>
+    </div>
+    <br>
+    <br>
+</div>
+{% endblock %}

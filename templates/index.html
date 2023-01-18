@@ -1,0 +1,98 @@
+{% extends "head.html" %}
+{% block title %}หน้าแรก{% endblock %}
+
+{% block navbar %}
+<a class="nav-link active fs-3 fw-bold" aria-current="page" href="{{url_for('index')}}">HOME</a>
+{% endblock %} - K-POP
+
+{% block navbar2 %}
+<!-- ------------------------------- -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="row">
+        <div class="dropdown col-6">
+            <button class="dropbtn">หมวดหมู่ <i class="fa-solid fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <form method="POST" action="{{ url_for('search', category='ALL') }}">
+                    <button class="btn btn-link" id="btn-link" type="submit">ALL</button>
+                </form>
+                <form method="POST" action="{{ url_for('search', category='BTS') }}">
+                    <button class="btn btn-link" id="btn-link" type="submit">BTS</button>
+                </form>
+                <form method="POST" action="{{ url_for('search', category='Enhypen') }}">
+                    <button class="btn btn-link" id="btn-link" type="submit">Enhypen</button>
+                </form>
+                <form method="POST" action="{{ url_for('search', category='Blackpink') }}">
+                    <button class="btn btn-link" id="btn-link" type="submit">Blackpink</button>
+                </form>
+                <form method="POST" action="{{ url_for('search', category='Treasure') }}">
+                    <button class="btn btn-link" id="btn-link" type="submit">Treasure</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-6">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{url_for('static',filename='images/slide_show_01.jpg')}}" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{url_for('static',filename='images/slide_show_02.jpg')}}" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{url_for('static',filename='images/slide_show_03.jpg')}}" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{url_for('static',filename='images/slide_show_04.jpg')}}" class="d-block w-100" alt="...">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+<!-- ----------->
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mt-2" id="text-top-card">สินค้าแนะนำ</h2>
+    <div class="row">
+        {% for item in product %}
+        <div class="col-6 col-lg-3 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title fs-5 fw-bold">{{ item['name'] }}</p>
+                    <img class="card-images" src="static/product-images/{{ item['image'] }}" alt="{{ item['image'] }}">
+                    <div class="row">
+                        <div class="text-start col-lg-6">
+                            <p class="mt-2" id="card-price">{{ item['price'] }}฿</p>
+                        </div>
+                        <div class="text-lg-end col-lg-6">
+                            {% if username %}
+                            <form method="POST" action="{{ url_for('addToCart', id=item['_id']) }}">
+                                <button type="submit" class="btn btn-primary mt-lg-2 mt-sm-0"
+                                    id="card-btn">หยิบใส่ตะกร้า</button>
+                            </form>
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="btn btn-primary mt-lg-2 mt-sm-0"
+                                id="card-btn">หยิบใส่ตะกร้า</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <br>
+    <br>
+    {% endblock %}
