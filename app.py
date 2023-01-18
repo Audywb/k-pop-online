@@ -185,11 +185,12 @@ def payment():
 @login_is_required
 def view_cart():
     product = []
+    price = 0
+    address = "1234"
     cout_cart = carts.count_documents({"user_email": session['email']})
     if cout_cart > 0:
         product = carts.find({"user_email": session['email']})
         price_total = []
-        price = 0
         address = session['address']
         for i in carts.find({"user_email": session['email']}):
             total = i['product_price']*i['product_amount']
