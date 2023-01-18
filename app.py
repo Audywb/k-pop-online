@@ -21,7 +21,8 @@ carts = db.carts
 purchased = db.purchased
 history = db.history
 
-UPLOAD_FOLDER = "/Users/66987/Documents/work-project/k-pop-shop/static/product-images"
+UPLOAD_FOLDER = "/Users/66987/Documents/work-project/k-pop-shop/static/product-images" #path ที่เก็บไฟล์ในเครื่องตัวเอง
+# หรือคลิกขวาบนโฟลเดอร์ product-images แล้ว Copy Path วางทับตัวเดิมได้เลย (เปลี่ยน \ เป็น /)
 ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "gif"]
 
 
@@ -387,4 +388,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    app.run(debug=False, host='0.0.0.0', port=8000)
